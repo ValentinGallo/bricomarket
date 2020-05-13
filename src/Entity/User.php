@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -55,6 +57,22 @@ class User implements UserInterface
      * @ORM\Column(type="date")
      */
     private $create_time;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender", orphanRemoval=true)
+     */
+    private $messages_send;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="receiver", orphanRemoval=true)
+     */
+    private $messages_received;
+
+    public function __construct()
+    {
+        $this->messages_send = new ArrayCollection();
+        $this->messages_received = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -131,5 +149,44 @@ class User implements UserInterface
 
     public function getRoles() {
         return ['ROLE_USER'];
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessagesSend(): Collection
+    {
+        return $this->messages_send;
+    }
+
+    public function addMessageSend(Message $messages_send): self
+    {
+        if (!$this->messages_send->contains($messages_send)) {
+            $this->messages_send[] = $messages_send;
+            $messages_send->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessageSend(Message $messages_send): self
+    {
+        if ($this->messages_send->contains($messages_send)) {
+            $this->messages_send->removeElement($messages_send);
+            // set the owning side to null (unless already changed)
+            if ($messages_send->getSender() === $this) {
+                $messages_send->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessagesReceived(): Collection
+    {
+        return $this->getMessagesReceived;
     }
 }
