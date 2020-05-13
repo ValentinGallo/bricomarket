@@ -8,20 +8,20 @@
 		</title>
 		{% block stylesheets %}
 			<link href="{{ asset('bootstrap/css/bootstrap.css') }}" rel="stylesheet"/>
-            <link href="{{ asset('css/global.css') }}" rel="stylesheet"/>
+			<link href="{{ asset('css/global.css') }}" rel="stylesheet"/>
 		{% endblock %}
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<img id="logo" src="{{ asset('images/logo.png') }}" class="img-fluid" alt="Responsive image">
-			<a class="navbar-brand" href="#">BricoMarket</a>
+			<a class="navbar-brand" href="{{ path('home') }}">BricoMarket</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item active">
+					<li class="nav-item">
 						<a class="nav-link" href="#">Catégories
 						</a>
 					</li>
@@ -29,18 +29,24 @@
 						<a class="nav-link" href="#">Contacts</a>
 					</li>
 				</ul>
-				<form class="form-inline my-2 my-lg-0">
-					<a type="button" class="btn btn-warning" href="{{ path('app_registration') }}">S'inscrire</a>
-					<a type="button" class="btn btn-warning" href="">Se connecter</a>
+				<form class="my-2 my-lg-0">
+					{% if not app.user %}
+						<a type="button" class="btn btn-dark" href="{{ path('app_registration') }}">S'inscrire</a>
+						<a type="button" class="btn btn-warning" href="{{ path('app_login') }}">Se connecter</a>
+					{% else %}
+						<a type="button" class="btn btn-warning" href="{{ path('app_logout') }}">Se déconnecter</a>
+					{% endif %}
 				</form>
 			</div>
 		</nav>
 		<div class="container">
-		{% block body %}{% endblock %}
-		</div>
-		{% block javascripts %}
-			<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-			<script src="{{ asset('bootstrap/js/bootstrap.bundle.js') }}"></script>
-		{% endblock %}
-	</body>
-</html>
+		{% block body %}
+				{% endblock %}
+			</div>
+			{% block javascripts %}
+				<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+				<script src="{{ asset('bootstrap/js/bootstrap.bundle.js') }}"></script>
+			{% endblock %}
+		</body>
+	</html>
+</body></html>
