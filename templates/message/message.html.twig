@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Messagerie
+{% endblock %}
+
+{% block body %}
+{{ form_start(form) }}
+
+	<div class="form-group">
+			{{ form_row(form.receiver, {'label': 'Nom d\'utilisateur' }) }}
+    </div>
+    <div class="form-group">
+            {{ form_row(form.text, {'label': 'Message' }) }}
+    </div>
+    <button type="submit" class="btn btn-warning">Envoyer</button>
+    {{ form_end(form) }}
+{% endblock %}

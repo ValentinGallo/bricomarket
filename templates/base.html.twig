@@ -35,7 +35,7 @@
 						<a type="button" class="btn btn-dark" href="{{ path('app_registration') }}">S'inscrire</a>
 						<a type="button" class="btn btn-warning" href="{{ path('app_login') }}">Se connecter</a>
 					{% else %}
-						<a href="{{ path('messages') }}"><i class="far fa-comments"></i></a>
+						<a href="{{ path('message') }}"><i class="far fa-comments"></i></a>
 						<a><i class="far fa-user"></i>{{ app.user.username }}</a>
 						<a type="button" class="btn btn-warning" href="{{ path('app_logout') }}">Se déconnecter</a>
 					{% endif %}
