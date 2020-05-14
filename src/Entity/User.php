@@ -68,10 +68,28 @@ class User implements UserInterface
      */
     private $messages_received;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Tool::class, mappedBy="Creator", orphanRemoval=true)
+     */
+    private $tools;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Reservation::class, mappedBy="User", orphanRemoval=true)
+     */
+    private $reservations;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="User", orphanRemoval=true)
+     */
+    private $comments;
+
     public function __construct()
     {
         $this->messages_send = new ArrayCollection();
         $this->messages_received = new ArrayCollection();
+        $this->tools = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -188,5 +206,98 @@ class User implements UserInterface
     public function getMessagesReceived(): Collection
     {
         return $this->getMessagesReceived;
+    }
+
+    /**
+     * @return Collection|Tool[]
+     */
+    public function getTools(): Collection
+    {
+        return $this->tools;
+    }
+
+    public function addTool(Tool $tool): self
+    {
+        if (!$this->tools->contains($tool)) {
+            $this->tools[] = $tool;
+            $tool->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTool(Tool $tool): self
+    {
+        if ($this->tools->contains($tool)) {
+            $this->tools->removeElement($tool);
+            // set the owning side to null (unless already changed)
+            if ($tool->getCreator() === $this) {
+                $tool->setCreator(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Reservation[]
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): self
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations[] = $reservation;
+            $reservation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): self
+    {
+        if ($this->reservations->contains($reservation)) {
+            $this->reservations->removeElement($reservation);
+            // set the owning side to null (unless already changed)
+            if ($reservation->getUser() === $this) {
+                $reservation->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getUser() === $this) {
+                $comment->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
