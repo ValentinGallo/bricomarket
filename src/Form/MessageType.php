@@ -18,14 +18,12 @@ class MessageType extends AbstractType
             ->add('text',  TextareaType::class, [
                 'attr' => ['rows'=> '8'],
             ])
-
             ->add('receiver', EntityType::class, [
-                // looks for choices from this entity
                 'class' => User::class,
-
-                // uses the User.username property as the visible option string
+                'required' => true,
                 'choice_label' => 'username',
-            ]);
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

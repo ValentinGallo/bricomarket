@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Déposer votre annonce
+{% endblock %}
+
+{% block body %}
+{{ form_start(form) }}
+<div class="text-white">
+	<h1>Déposer votre annonce</h1>
+	<div class="form-group">
+		{{ form_row(form.name, {'label': 'Nom de l\'outil' }) }}
+    </div>
+    <div class="form-group">
+            {{ form_row(form.text, {'label': 'Description' }) }}
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            {{ form_row(form.address, {'label': 'Adressse' }) }}
+        </div>
+        <div class="form-group col-md-6">
+            {{ form_row(form.department, {'label': 'Département' }) }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            {{ form_row(form.category, {'label': 'Catégorie' }) }}
+        </div>
+        <div class="form-group col-md-6">
+            {{ form_row(form.prices, {'label': 'Prix' }) }}
+        </div>  
+    </div>
+    <div class="form-group">
+        {{ form_row(form.picture, {'label': 'Photo (optionnel)' }) }}
+    </div>
+</div>
+    <button type="submit" class="btn btn-warning">Créer</button>
+{{ form_end(form) }}
+{% endblock %}

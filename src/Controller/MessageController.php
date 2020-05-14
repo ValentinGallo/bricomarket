@@ -18,8 +18,6 @@ class MessageController extends AbstractController
      */
     public function message(Request $request, EntityManagerInterface $manager)
     {
-        //$users = $this->getDoctrine()->getRepository(User::class)->findAll();
-
         $message = new Message();
 
         $form = $this->createForm(MessageType::class, $message);
