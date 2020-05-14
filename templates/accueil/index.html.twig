@@ -1,7 +1,56 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}Accueil
+{% endblock %}
 
 {% block body %}
-<h1 class="text-white">BricoMarket</h1>
+	<div class="mx-auto" style="width: 200px;">
+		<h1 class="text-white">BricoMarket</h1>
+	</div>
+	<div class="form-row">
+		<div class="form-group col-md-8">
+			<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+		</div>
+		<div class="form-group col-md-2">
+			<select id="inputState" class="form-control">
+				<option selected>Département...</option>
+				<option>...</option>
+			</select>
+		</div>
+        <div class="form-group col-md-2">  
+            <button class="btn btn-warning"><i class="fas fa-search"></i> Rechercher</button>
+        </div>
+	</div>
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="card" style="width: 18rem;">
+				<img src="https://www.flex-tools.com/fileadmin/flex-tools.com/media/03_Startseite/jigsaw.jpg" class="card-img-top" alt="...">
+				<div class="card-body">
+					<h5 class="card-title">Louer un outil</h5>
+					<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+					<a href="#" class="btn btn-warning">Louer</a>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="card" style="width: 18rem;">
+				<img src="https://i.pinimg.com/originals/2a/4b/4b/2a4b4bca04fc3b9034c05e2f3a76f69a.jpg" class="card-img-top" alt="...">
+				<div class="card-body">
+					<h5 class="card-title">Réserver un poste de travail</h5>
+					<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+					<a href="#" class="btn btn-warning">Réserver</a>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="card" style="width: 18rem;">
+				<img src="https://www.ouestfrance-auto.com/9d2d5a3/images/landing-page/lp-upsell-une.png" class="card-img-top" alt="...">
+				<div class="card-body">
+					<h5 class="card-title">Déposer votre annonce</h5>
+					<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+					<a href="#" class="btn btn-warning">Déposer</a>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

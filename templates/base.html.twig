@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="UTF-8">
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<title>
 			{% block title %}Welcome!
 			{% endblock %}
@@ -35,16 +36,18 @@
 						<a type="button" class="btn btn-dark" href="{{ path('app_registration') }}">S'inscrire</a>
 						<a type="button" class="btn btn-warning" href="{{ path('app_login') }}">Se connecter</a>
 					{% else %}
-						<a href="{{ path('message') }}"><i class="far fa-comments"></i></a>
-						<a><i class="far fa-user"></i>{{ app.user.username }}</a>
+						<a href="{{ path('message') }}">
+							<i class="far fa-comments"></i>
+						</a>
+						<a>
+							<i class="far fa-user"></i>
+							{{ app.user.username }}</a>
 						<a type="button" class="btn btn-warning" href="{{ path('app_logout') }}">Se déconnecter</a>
 					{% endif %}
 				</form>
 			</div>
 		</nav>
-		<div class="container">
-		{% block body %}
-				{% endblock %}
+		<div class="container"> {% block body %}{% endblock %}
 			</div>
 			{% block javascripts %}
 				<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
