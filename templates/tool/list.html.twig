@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste annonces
+{% endblock %}
+
+{% block body %}
+	<h1 class="text-white">Liste des outils disponibles</h1>
+	{% for tool in list_tools %}
+		<div class="card mb-3">
+			{% if tool.picture %}
+				<img src="{{ asset('uploads/pictures/' ~ tool.picture) }}" class="card-img-top" alt="...">
+			{% endif %}
+			<div class="card-body">
+				<h5 class="card-title">{{ tool.name }}<span class="badge badge-warning float-right">{{ tool.prices }}€</span></h5>
+				<p class="card-text">{{ tool.text }}</p>
+                <a>User : {{ tool.getCreator().username }} Departement : {{ tool.getDepartment().name }}  Adresse : {{ tool.address }}</a>
+				<p class="card-text">
+					<small class="text-muted">Annonce publié le {{ tool.date|date("m/d/Y") }}</small>
+				</p>
+			</div>
+		</div>
+	{% endfor %}
+{% endblock %}
