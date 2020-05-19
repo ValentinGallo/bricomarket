@@ -21,7 +21,7 @@ class ToolType extends AbstractType
         $builder
             ->add('name')
             ->add('text',TextareaType::class, [
-                'attr' => ['rows'=> '4'],
+                'attr' => ['rows'=> '4', 'maxlength'=>'255'],
             ])
             ->add('picture', FileType::class, [
                 'attr' => ['accept' =>'image/png, image/jpeg'],
@@ -43,13 +43,15 @@ class ToolType extends AbstractType
             ->add('type', ChoiceType::class, [
                 'choices'  => [
                     'Offre' => 'Offre',
-                    'Demande' => true,
+                    'Demande' => 'Demande',
                 ],
             ])
             ->add('department', EntityType::class, [
                 'class' => Department::class,
                 'required' => true,
-                'choice_label' => 'name',
+                'choice_label' => function (Department $department) {
+                    return $department->getFullName();
+                }
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,

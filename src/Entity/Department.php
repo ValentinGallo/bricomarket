@@ -34,6 +34,11 @@ class Department
      */
     private $workstations;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $code;
+
     public function __construct()
     {
         $this->Tools = new ArrayCollection();
@@ -117,5 +122,22 @@ class Department
         }
 
         return $this;
+    }
+
+    public function getCode(): ?int
+    {
+        return $this->code;
+    }
+
+    public function setCode(int $code): self
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    public function getFullName(): ?string
+    {
+        return strval($this->getCode()).' - '.$this->getName();
     }
 }

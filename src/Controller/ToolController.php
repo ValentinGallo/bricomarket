@@ -16,9 +16,9 @@ class ToolController extends AbstractController
     /**
      * @Route("/annonces", name="list_tool")
      */
-    public function listTool(EntityManagerInterface $manager)
+    public function listTool()
     {
-        $tools = $manager->getRepository(Tool::class)->findAll();
+        $tools = $this->getDoctrine()->getRepository(Tool::class)->findAll();
         return $this->render('tool/list.html.twig', [
             'list_tools' => $tools,
         ]);
@@ -68,4 +68,16 @@ class ToolController extends AbstractController
 
         return $this->render('tool/createTool.html.twig', ['form' => $form->createView()]);
     }
+
+    /**
+     * @Route("/outil/{id}", name="tool")
+     */
+    public function tool($id)
+    {
+        $tool = $this->getDoctrine()->getRepository(Tool::class)->find($id);
+        return $this->render('tool/tool.html.twig', [
+            'tool' => $tool,
+        ]);
+    }
+
 }
