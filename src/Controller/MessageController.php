@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Message;
-use App\Form\MessageType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -14,27 +13,32 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class MessageController extends AbstractController
 {
     /**
-     * @Route("/message", name="message")
+     * @Route("/message/{id}", name="message")
      */
-    public function message(Request $request, EntityManagerInterface $manager)
+    public function message($id,Request $request, EntityManagerInterface $manager)
     {
         $message = new Message();
 
-        $form = $this->createForm(MessageType::class, $message);
-
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()) {
-            $message->setDate(new \DateTime('@'.strtotime('now')));
+        if($request->getContent() != null) {
+            $date = new \DateTime('@'.strtotime('now'));
+            $date->add(new \DateInterval("PT2H"));
+            $message->setDate($date);
             $message->setIsRead(false);
             $message->setSender($this->getUser());
-
+            $message->setText($request->get('text'));
+            $receiver = $this->getDoctrine()->getRepository(User::class)->find($request->get('receiver_id'));
+            $message->setReceiver($receiver);
             $manager->persist($message);
             $manager->flush();
 
-            return $this->redirectToRoute('home');
+            return $this->render('message/message.html.twig', [
+                'default_id' => $id,
+            ]);
         }
 
-        return $this->render('message/message.html.twig', ['form' => $form->createView()]);
+
+        return $this->render('message/message.html.twig', [
+            'default_id' => $id,
+        ]);
     }
 }

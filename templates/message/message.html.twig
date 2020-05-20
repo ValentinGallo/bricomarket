@@ -4,14 +4,49 @@
 {% endblock %}
 
 {% block body %}
-{{ form_start(form) }}
+	<h1 class="text-white">Messagerie</h1>
+	<div class="row text-white">
+		<div class="col-3">
+			<h3>Contacts :</h3>
+			<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+				{% for user in app.getUser().getListUserMessages() %}
+					<a class="nav-link {% if user.id == default_id %}active{% endif %}" id="v-pills-{{ user.id }}-tab" data-toggle="pill" href="#v-pills-{{ user.id }}" role="tab" aria-controls="v-pills-home" aria-selected="true">{{ user.username }}</a>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="col-9">
+			<div class="tab-content" id="v-pills-tabContent">
+				{% for user in app.getUser().getListUserMessages() %}
+					<div class="tab-pane fade {% if user.id == default_id %}active show{% endif %}" id="v-pills-{{ user.id }}" role="tabpanel" aria-labelledby="{{ user.id }}-tab">
+						<div class="row overflow-auto" style="max-height: 750px;">
+							{% for message in app.getUser().getMessageByUser(user)|sort %}
+								<div class="col-md-8 {% if app.getUser() == message.getSender() %}offset-md-4{% endif %}">
+									<div class="card text-dark mb-3 {% if app.getUser() != message.getSender() %}bg-warning{% endif %}">
+										<div class="card-body">
+											{{ message.text }}
+										</div>
+										<div class="card-footer">{{ message.date|date("m/d/Y H:i") }}
+											-
+											{{ message.getSender().username }}</div>
+									</div>
+								</div>
+							{% endfor %}
+							<div class="card text-dark mb-3 col-md-8 offset-md-4">
+								<form method="post" action="{{ path('message', {'id': user.id }) }}">
+									<div class="card-body">
+										<label>Répondre à
+											{{ user.username }}</label>
+										<textarea name="text" class="form-control" rows="5"></textarea>
+										<input type="hidden" name="receiver_id" value="{{ user.id }}">
+									</div>
+									<button type="submit" class="btn btn-warning float-right mb-3">Envoyer</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
 
-	<div class="form-group">
-			{{ form_row(form.receiver, {'label': 'Nom d\'utilisateur' }) }}
-    </div>
-    <div class="form-group">
-            {{ form_row(form.text, {'label': 'Message' }) }}
-    </div>
-    <button type="submit" class="btn btn-warning">Envoyer</button>
-    {{ form_end(form) }}
+			</div>
+		</div>
+	</div>
 {% endblock %}

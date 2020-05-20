@@ -2,8 +2,9 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Department;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AccueilController extends AbstractController
 {
@@ -12,8 +13,10 @@ class AccueilController extends AbstractController
      */
     public function index()
     {
+        $departments = $this->getDoctrine()->getRepository(Department::class)->findAll();
+
         return $this->render('accueil/index.html.twig', [
-            'controller_name' => 'AccueilController',
+            'list_department' => $departments,
         ]);
     }
 }

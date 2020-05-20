@@ -7,19 +7,23 @@
 	<div class="mx-auto" style="width: 200px;">
 		<h1 class="text-white">BricoMarket</h1>
 	</div>
-	<div class="input-group mb-2">
-		<input type="text" class="form-control" placeholder="Taper ici votre outil">
-		<select class="custom-select col-md-4">
-			<option selected>Département...</option>
-			<option>...</option>
-		</select>
-		<div class="input-group-append">
-			<button class="btn btn-warning">
-				<i class="fas fa-search"></i>
-				Rechercher</button>
+	<form method="post" action="{{ path('list_tool') }}">
+		<div class="input-group mb-2">
+			<input name="name" type="text" class="form-control" placeholder="Taper ici votre outil">
+			<select name="department" class="custom-select col-md-4">
+				<option value="">Département...</option>
+				{% for department in list_department %}
+					<option value="{{ department.getId() }}">{{ department.getFullName() }}</option>
+				{% endfor %}
+			</select>
+			<input name="category" type="hidden" value="">
+			<div class="input-group-append">
+				<button class="btn btn-warning">
+					<i class="fas fa-search"></i>
+					Rechercher</button>
+			</div>
 		</div>
-
-	</div>
+	</form>
 	<div class="card-deck">
 		<div class="card" style="width: 20rem;">
 			<img src="https://www.flex-tools.com/fileadmin/flex-tools.com/media/03_Startseite/jigsaw.jpg" class="card-img-top" alt="...">

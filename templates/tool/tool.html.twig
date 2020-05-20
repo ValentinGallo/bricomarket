@@ -5,66 +5,95 @@
 {% endblock %}
 
 {% block body %}
-	<div class="row">
-		<div class="col-sm-8">
-			<div class="card mb-3">
-				<div class="card-header">
-					<span class="badge badge-dark">
-						{{ tool.type }}</span>
-					<small class="text-muted float-right">Annonce publié le
-						{{ tool.date|date("m/d/Y") }}</small>
-				</div>
-				<div class="card-body">
-					<h5 class="card-title">{{ tool.name }}</h5>
-					<h5 class="card-title float-right">{{ tool.prices }}€/jour</h5>
-					<p class="card-text">{{ tool.text|nl2br }}</p>
-				</div>
+<div class="row">
+	<div class="col-sm-8">
+		<div class="card mb-3">
+			<div class="card-header">
+				<span class="badge badge-dark">
+					{{ tool.type }}</span>
+				<small class="text-muted float-right">Annonce publié le
+					{{ tool.date|date("m/d/Y") }}</small>
 			</div>
-		</div>
-		<div class="col-sm-4">
-			<div class="card mb-3">
-				<div class="card-header">
-					Vendeur
-				</div>
-				<div class="card-body">
-					<h5 class="card-title">Nom :
-						{{ tool.getCreator().username }}</h5>
-					<p class="card-text">Email :
-						{{ tool.getCreator().email }}</p>
-					<p class="card-text">Télephone :
-						{{ tool.getCreator().telephone }}</p>
-					<a href="#" class="btn btn-warning float-right">Contacter le vendeur</a>
-				</div>
+			<div class="card-body">
+				<h5 class="card-title">{{ tool.name }}</h5>
+				<h5 class="card-title float-right">{{ tool.prices }}€/jour</h5>
+				<p class="card-text">{{ tool.text|nl2br }}</p>
 			</div>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-sm-8">
-			<div class="card">
-				<div class="card-header">
-					Image
-				</div>
-				<div class="card-body">
-					{% if tool.picture %}
-						<img src="{{ asset('uploads/pictures/' ~ tool.picture) }}" class="img-fluid">
+	<div class="col-sm-4">
+		<div class="card mb-3">
+			<div class="card-header">
+				Vendeur
+			</div>
+			<div class="card-body">
+				<h5 class="card-title">Nom :
+					{{ tool.getCreator().username }}</h5>
+				<p class="card-text">Email :
+					{{ tool.getCreator().email }}</p>
+				<p class="card-text">Télephone :
+					{{ tool.getCreator().telephone }}</p>
+					{% if app.getUser().userContacted(tool.getCreator()) %}
+					<a href="{{ path('message', {'id': tool.getCreator().id}) }}" class="btn btn-warning float-right">Contacter le loueur</a>
 					{% else %}
-						<img src="{{ asset('images/no_image.png') }}" class="img-fluid">
+						<button data-toggle="modal" data-target="#message" class="btn btn-warning float-right">Contacter le loueur</button>
 					{% endif %}
-				</div>
+				
 			</div>
 		</div>
-		<div class="col-sm-4">
-			<div class="card">
-				<div class="card-header">
-					Lieu de la location
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-8">
+		<div class="card">
+			<div class="card-header">
+				Image
+			</div>
+			<div class="card-body">
+				{% if tool.picture %}
+					<img src="{{ asset('uploads/pictures/' ~ tool.picture) }}" class="img-fluid">
+				{% else %}
+					<img src="{{ asset('images/no_image.png') }}" class="img-fluid">
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-4">
+		<div class="card">
+			<div class="card-header">
+				Lieu de la location
+			</div>
+			<div class="card-body">
+				<p class="card-text" id="address">
+					Département :</p>
+				<p class="card-text" id="address">
+					{{ tool.address }}</p>
+
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="message" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Nouveau message à
+					{{ tool.getCreator().username }}</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			{{ form_start(form) }}
+			<div class="modal-body">
+            	{{ form_row(form.text, {'label': 'Message' }) }}
+				<input type="hidden" name="receiver_id" value="{{ tool.getCreator().id }}">
+			</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+					<button type="submit" class="btn btn-warning">Envoyer</button>
 				</div>
-				<div class="card-body">
-                <p class="card-text" id="address">
-						Département :</p>
-                <p class="card-text" id="address">
-						{{ tool.address }}</p>
-                
-				</div>
+				{{ form_end(form) }}
 			</div>
 		</div>
 	</div>

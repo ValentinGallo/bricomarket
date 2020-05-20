@@ -37,7 +37,7 @@
 						<a type="button" class="btn btn-dark" href="{{ path('app_registration') }}">S'inscrire</a>
 						<a type="button" class="btn btn-warning" href="{{ path('app_login') }}">Se connecter</a>
 					{% else %}
-						<a href="{{ path('message') }}">
+						<a href="{{ path('message', {'id': 'all'}) }}">
 							<i class="far fa-comments"></i>
 						</a>
 						<a>

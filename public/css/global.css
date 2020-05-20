@@ -11,4 +11,12 @@ body {
     height: 15vw;
     object-fit: cover;
 }
-#map { position:absolute; top:0px; bottom:0px; width:100%; }
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link{
+    background-color: #ffc107!important;
+    color: black;
+}
+.nav-pills .nav-link{
+    background-color: white!important;
+    color: black;
+}

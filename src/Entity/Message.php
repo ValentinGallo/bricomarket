@@ -23,7 +23,7 @@ class Message
     private $text;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      */
     private $date;
 

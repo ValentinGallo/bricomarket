@@ -4,7 +4,24 @@
 {% endblock %}
 
 {% block body %}
+	<form method="post" action="{{ path('list_tool') }}">
+	<div class="input-group mb-2">
+		<input name="name" type="text" value="{{ name }}" class="form-control"  placeholder="Taper ici votre outil">
+		<select name="department" class="custom-select col-md-4">
+			<option value="">Département...</option>
+			{% for department in list_department %}
+			<option value="{{ department.getId() }}">{{ department.getFullName() }}</option>
+			{% endfor %}
+		</select>
+		<div class="input-group-append">
+			<button class="btn btn-warning">
+				<i class="fas fa-search"></i>
+				Rechercher</button>
+		</div>
+	</div>
+	</form>
 	<h1 class="text-white">Liste des outils disponibles</h1>
+
 	<div class="row">
 		{% for tool in list_tools %}
 			<div class="col-sm-6">
@@ -20,7 +37,8 @@
 								{{ tool.type }}</span>
 							{{ tool.name }}<span class="badge badge-warning float-right">{{ tool.prices }}€/jour</span>
 						</h5>
-						<p class="card-text">{{ tool.text|slice(0,60) }} (...)</p>
+						<p class="card-text">{{ tool.text|slice(0,60) }}
+							(...)</p>
 						<i class="fas fa-user"></i>
 						{{ tool.getCreator().username }}
 						<i class="fas fa-map-marker-alt"></i>

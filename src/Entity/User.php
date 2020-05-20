@@ -205,7 +205,7 @@ class User implements UserInterface
      */
     public function getMessagesReceived(): Collection
     {
-        return $this->getMessagesReceived;
+        return $this->messages_received;
     }
 
     /**
@@ -300,4 +300,51 @@ class User implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getListUserMessages(): Collection
+    {
+        $users = new ArrayCollection();
+        foreach ($this->messages_send as $message){
+            if ( !$users->contains($message->getReceiver()) ) {
+                $users[] = $message->getReceiver();
+            }
+        }
+        foreach ($this->messages_received as $message){
+            if ( !$users->contains($message->getSender()) ) {
+                $users[] = $message->getSender();
+            }
+        }
+        return $users;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessageByUser(?User $user): Collection
+    {
+        $messages = new ArrayCollection();
+        foreach ($this->messages_send as $message){
+            if ($user == $message->getReceiver()) {
+                $messages[] = $message;
+            }
+        }
+        foreach ($this->messages_received as $message){
+            if ($user == $message->getSender()) {
+                $messages[] = $message;
+            }
+        }
+        return $messages;
+    }
+
+    public function userContacted(?User $user): ?bool
+    {
+        foreach ($this->getListUserMessages() as $userMessage){
+            if($user == $userMessage)return true;
+        }
+        return false;
+    }
+
 }

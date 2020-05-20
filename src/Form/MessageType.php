@@ -18,11 +18,12 @@ class MessageType extends AbstractType
             ->add('text',  TextareaType::class, [
                 'attr' => ['rows'=> '8'],
             ])
+            /*
             ->add('receiver', EntityType::class, [
                 'class' => User::class,
                 'required' => true,
                 'choice_label' => 'username',
-            ])
+            ])*/
         ;
     }
 
