@@ -62,4 +62,32 @@ class SecurityController extends AbstractController
     public function logout(){
     }
     
+    /** 
+     * @route("/profil", name="profil")
+    */
+    public function profil(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder){
+
+        $category = $this->getDoctrine()->getRepository(Category::class)->findAll();
+
+        $utilisateur = $this->getDoctrine()->getRepository(user::class)->find($this->getUser()->getId());
+        
+        
+        //Modification du profil
+        $form = $this->createForm(RegistrationType::class, $utilisateur);
+        $form->handleRequest($request);
+        if($form->isSubmitted()&& $form->isValid())
+        {
+            $hash = $encoder->encodePassword( $utilisateur,  $utilisateur->getPassword());
+            $utilisateur->setPassword($hash);
+            
+            $manager->persist($utilisateur);
+            
+            $manager->flush();
+        }
+        return $this->render('security/profil.html.twig',[
+            'form' => $form->createView(),
+            'list_category' => $category,
+        ]);
+    }
+
 }

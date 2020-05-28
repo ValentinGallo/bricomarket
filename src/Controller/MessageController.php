@@ -18,6 +18,10 @@ class MessageController extends AbstractController
      */
     public function message($id,Request $request, EntityManagerInterface $manager)
     {
+        //isRead() true
+        $manager->persist($this->getUser()->setMessagesRead());
+        $manager->flush();
+        
         $category = $this->getDoctrine()->getRepository(Category::class)->findAll();
         
         $message = new Message();

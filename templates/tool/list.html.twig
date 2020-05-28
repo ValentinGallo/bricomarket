@@ -48,7 +48,7 @@
 		<div class="tab-pane fade show active" id="Offre" role="tabpanel" aria-labelledby="Offre-tab">
 			<div class="row">
 				{% for tool in list_tools %}
-					{% if tool.type == 'Offre' %}
+					{% if tool.type == 'Offre' and tool.getIsOnline() %}
 						<div class="col-sm-6">
 							<div class="card mb-3 ">
 								{% if tool.picture %}
@@ -88,7 +88,7 @@
 		<div class="tab-pane fade" id="Demande" role="tabpanel" aria-labelledby="Demande-tab">
 			<div class="row">
 				{% for tool in list_tools %}
-					{% if tool.type == 'Demande' %}
+					{% if tool.type == 'Demande' and tool.getIsOnline() %}
 						<div class="col-sm-6">
 							<div class="card mb-3 ">
 								{% if tool.picture %}

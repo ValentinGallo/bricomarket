@@ -81,6 +81,11 @@ class Tool
      */
     private $locations;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isOnline;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -270,6 +275,18 @@ class Tool
                 $location->setTool(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsOnline(): ?bool
+    {
+        return $this->isOnline;
+    }
+
+    public function setIsOnline(bool $isOnline): self
+    {
+        $this->isOnline = $isOnline;
 
         return $this;
     }

@@ -55,8 +55,16 @@
 					{% else %}
 						<a href="{{ path('message', {'id': 'all'}) }}">
 							<i class="far fa-comments"></i>
+							{% if app.getUser().getNotReadNumber() %}
+								<span class="badge badge-warning">{{ app.getUser().getNotReadNumber() }}</span>
+							{% else %}
+								<span class="badge badge-success">0</span>
+							{% endif %}
+							
+							Messages
+							
 						</a>
-						<a>
+						<a href="{{ path('profil') }}">
 							<i class="far fa-user"></i>
 							{{ app.user.username }}</a>
 						<a type="button" class="btn btn-warning" href="{{ path('app_logout') }}">Se déconnecter</a>

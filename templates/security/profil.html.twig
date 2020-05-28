@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil
+{% endblock %}
+
+{% block body %}
+<h2 class="text-white">Mes informations</h2>
+<div class="card">
+	<div class="card-body">
+		{{ form_start(form) }}
+		<div class="row">
+			<div class="col">
+				{{ form_row(form.username, {'label': 'Nom d\'utilisateur' }) }}
+        	</div>
+        	<div class="col">
+            	{{ form_row(form.telephone, {'label': 'Téléphone' }) }}
+        	</div>
+    	</div>
+    	{{ form_row(form.email, {'label': 'Adresse mail' }) }}
+    	<div class="row">
+        	<div class="col">
+            	{{ form_row(form.password, {'label': 'Mot de passe' }) }}
+        	</div>
+        	<div class="col">
+            {{ form_row(form.confirm_password, {'label': 'Confirmation de mot de passe' }) }}
+        	</div>
+    	</div>
+    	<button type="submit" class="btn btn-warning">Modifier</button>
+		{{ form_end(form) }}
+	</div>
+</div>
+<h2 class="text-white">Mes annonces</h2>
+<table class="table text-white">
+  <thead>
+    <tr>
+      <th scope="col">Nom</th>
+      <th scope="col">Statut</th>
+      <th scope="col">Consulter</th>
+      <th scope="col">Supprimer</th>
+    </tr>
+  </thead>
+  <tbody>
+	{% for tool in app.getUser().getTools() %}
+	<tr>
+      <th scope="row">{{ tool.getName() }}</th>
+	  {% if tool.getIsOnline() %}
+	  <td><a type="button" class="btn btn-success" href="{{ path('update_online', {'id': tool.id, 'value': 0}) }}">Online</a></td>
+	  {% else %}
+		  <td><a type="button" class="btn btn-danger" href="{{ path('update_online', {'id': tool.id, 'value': 1}) }}">Offline</a></td>
+	  {% endif %}
+      
+      <td><button type="button" class="btn btn-warning">Voir</button></td>
+      <td><button type="button" class="btn btn-danger">Supprimer</button></td>
+    </tr>
+	{% endfor %}
+  </tbody>
+</table>
+{% endblock %}

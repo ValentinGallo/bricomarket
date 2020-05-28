@@ -384,4 +384,25 @@ class User implements UserInterface
         return $this;
     }
 
+    public function getNotReadNumber(): ?int
+    {
+        $total = 0;
+        foreach ($this->messages_received as $message){
+            if (!$message->getIsRead()) {
+                $total++;
+            }
+        }
+        return $total;
+    }
+
+    public function setMessagesRead(): self
+    {
+        foreach ($this->messages_received as $message){
+            if (!$message->getIsRead()) {
+                $message->setIsRead(true);
+            }
+        }
+        return $this;
+    }
+
 }

@@ -79,6 +79,7 @@ class ToolController extends AbstractController
             }
             $tool->setDate(new \DateTime('@' . strtotime('now')));
             $tool->setCreator($this->getUser());
+            $tool->setIsOnline(true);
             $manager->persist($tool);
             $manager->flush();
 
@@ -126,4 +127,17 @@ class ToolController extends AbstractController
             'list_category' => $category,
         ]);
     }
+
+    /**
+     * @Route("/update_online/{id}/{value}", name="update_online")
+     */
+    public function update_online($id,$value,EntityManagerInterface $manager)
+    {
+        $tool = $this->getDoctrine()->getRepository(Tool::class)->find($id);
+        $tool->setIsOnline($value);
+        $manager->persist($tool);
+        $manager->flush();
+        return $this->redirectToRoute('profil');
+    }
+
 }
