@@ -83,6 +83,11 @@ class User implements UserInterface
      */
     private $comments;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Location::class, mappedBy="User", orphanRemoval=true)
+     */
+    private $locations;
+
     public function __construct()
     {
         $this->messages_send = new ArrayCollection();
@@ -90,6 +95,7 @@ class User implements UserInterface
         $this->tools = new ArrayCollection();
         $this->reservations = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->locations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -345,6 +351,37 @@ class User implements UserInterface
             if($user == $userMessage)return true;
         }
         return false;
+    }
+
+    /**
+     * @return Collection|Location[]
+     */
+    public function getLocations(): Collection
+    {
+        return $this->locations;
+    }
+
+    public function addLocation(Location $location): self
+    {
+        if (!$this->locations->contains($location)) {
+            $this->locations[] = $location;
+            $location->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLocation(Location $location): self
+    {
+        if ($this->locations->contains($location)) {
+            $this->locations->removeElement($location);
+            // set the owning side to null (unless already changed)
+            if ($location->getUser() === $this) {
+                $location->setUser(null);
+            }
+        }
+
+        return $this;
     }
 
 }

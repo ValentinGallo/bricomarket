@@ -7,6 +7,7 @@ use App\Entity\Tool;
 use App\Entity\User;
 use App\Form\ToolType;
 use App\Entity\Message;
+use App\Entity\Category;
 use App\Form\MessageType;
 use App\Entity\Department;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,42 +24,20 @@ class ToolController extends AbstractController
      */
     public function listTool(Request $request)
     {
+        
         $departments = $this->getDoctrine()->getRepository(Department::class)->findAll();
 
-        if ($request->getContent() != null) {
-            if ($request->get('department') && $request->get('name')) {
-                $tools = $this->getDoctrine()->getRepository(Tool::class)->findBy(
-                    ['department' => $request->get('department'), 'name' => $request->get('name')]
-                );
-            }
-            else if($request->get('name')){
-                $tools = $this->getDoctrine()->getRepository(Tool::class)->findBy(
-                    ['name' => $request->get('name')]
-                );
-            }
-            else if($request->get('department')){
-                $tools = $this->getDoctrine()->getRepository(Tool::class)->findBy(
-                    ['department' => $request->get('department')]
-                );
-            }
-            else{
-                $tools = $this->getDoctrine()->getRepository(Tool::class)->findAll();
-            }
+        $category = $this->getDoctrine()->getRepository(Category::class)->findAll();
 
-        
-            return $this->render('tool/list.html.twig', [
-                'list_department' => $departments,
-                'list_tools' => $tools,
-                'name' => $request->get('name'),
-                'dep' => $request->get('name'),
-            ]);
-        }
+        $tools = $this->getDoctrine()->getRepository(Tool::class)->findCustom($request->get('name'),$request->get('department'),$request->get('category'));
 
-        $tools = $this->getDoctrine()->getRepository(Tool::class)->findAll();
         return $this->render('tool/list.html.twig', [
             'list_department' => $departments,
+            'list_category' => $category,
             'list_tools' => $tools,
-            'name' => '',
+            'name' => $request->get('name'),
+            'dep' => $request->get('department'),
+            'cat' => $request->get('category'),
         ]);
     }
 
@@ -72,6 +51,8 @@ class ToolController extends AbstractController
         $form = $this->createForm(ToolType::class, $tool);
 
         $form->handleRequest($request);
+
+        $category = $this->getDoctrine()->getRepository(Category::class)->findAll();
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $pictureFile */
@@ -104,7 +85,10 @@ class ToolController extends AbstractController
             return $this->redirectToRoute('list_tool');
         }
 
-        return $this->render('tool/createTool.html.twig', ['form' => $form->createView()]);
+        return $this->render('tool/createTool.html.twig', [
+            'form' => $form->createView(),
+            'list_category' => $category,
+            ]);
     }
 
     /**
@@ -117,6 +101,8 @@ class ToolController extends AbstractController
         $form = $this->createForm(MessageType::class, $message);
 
         $form->handleRequest($request);
+
+        $category = $this->getDoctrine()->getRepository(Category::class)->findAll();
 
         if($form->isSubmitted() && $form->isValid()) {
             $date = new \DateTime('@'.strtotime('now'));
@@ -137,6 +123,7 @@ class ToolController extends AbstractController
         return $this->render('tool/tool.html.twig', [
             'tool' => $tool,
             'form' => $form->createView(),
+            'list_category' => $category,
         ]);
     }
 }

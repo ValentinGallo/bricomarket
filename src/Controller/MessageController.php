@@ -4,9 +4,10 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Message;
-use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Category;
 use Doctrine\ORM\EntityManagerInterface;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -17,6 +18,8 @@ class MessageController extends AbstractController
      */
     public function message($id,Request $request, EntityManagerInterface $manager)
     {
+        $category = $this->getDoctrine()->getRepository(Category::class)->findAll();
+        
         $message = new Message();
 
         if($request->getContent() != null) {
@@ -32,12 +35,14 @@ class MessageController extends AbstractController
             $manager->flush();
 
             return $this->render('message/message.html.twig', [
+                'list_category' => $category,
                 'default_id' => $id,
             ]);
         }
 
 
         return $this->render('message/message.html.twig', [
+            'list_category' => $category,
             'default_id' => $id,
         ]);
     }

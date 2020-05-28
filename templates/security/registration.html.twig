@@ -6,13 +6,12 @@
 {% block body %}
 
 
-	<h1 class="h3 mb-3 font-weight-normal">Inscription</h1>
-
-	{{ form_start(form) }}
-
-	<div class="row">
-		<div class="col">
-			{{ form_row(form.username, {'label': 'Nom d\'utilisateur' }) }}
+	<h1 class="h3 mb-3 text-white font-weight-normal">Inscription</h1>
+	<div class="text-white">
+		{{ form_start(form) }}
+		<div class="row">
+			<div class="col">
+				{{ form_row(form.username, {'label': 'Nom d\'utilisateur' }) }}
         </div>
         <div class="col">
             {{ form_row(form.telephone, {'label': 'Téléphone' }) }}
@@ -29,4 +28,5 @@
     </div>
     <button type="submit" class="btn btn-warning">s'inscrire</button>
     {{ form_end(form) }}
+			</div>
 		{% endblock %}

@@ -4,19 +4,25 @@
 {% endblock %}
 
 {% block body %}
-	<div class="mx-auto" style="width: 200px;">
-		<h1 class="text-white">BricoMarket</h1>
+	<div class="mx-auto" style="width: 250px;">
+		<img src="{{ asset('images/logo.png') }}" class="img-thumbnail" style="width: 100%;height: 150px;object-fit: cover;" alt="Responsive image">
+		<h1 class="text-white" style="margin-left:15px;	">BricoMarket</h1>
 	</div>
 	<form method="post" action="{{ path('list_tool') }}">
 		<div class="input-group mb-2">
 			<input name="name" type="text" class="form-control" placeholder="Taper ici votre outil">
 			<select name="department" class="custom-select col-md-4">
-				<option value="">Département...</option>
+				<option value="">Départements...</option>
 				{% for department in list_department %}
 					<option value="{{ department.getId() }}">{{ department.getFullName() }}</option>
 				{% endfor %}
 			</select>
-			<input name="category" type="hidden" value="">
+			<select name="category" class="custom-select col-md-2">
+				<option value="">Catégories...</option>
+				{% for category in list_category %}
+					<option value="{{ category.getId() }}">{{ category.getName() }}</option>
+				{% endfor %}
+			</select>
 			<div class="input-group-append">
 				<button class="btn btn-warning">
 					<i class="fas fa-search"></i>
@@ -39,7 +45,7 @@
 			<div class="card-body">
 				<h5 class="card-title">Réserver un poste de travail</h5>
 				<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-				<a class="btn btn-warning">Réserver</a>
+				<a class="btn btn-success">Réserver</a>
 			</div>
 		</div>
 
@@ -48,7 +54,7 @@
 			<div class="card-body">
 				<h5 class="card-title">Déposer votre annonce</h5>
 				<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-				<a class="btn btn-warning" href="{{ path('create_tool') }}">Déposer</a>
+				<a class="btn btn-dark text-white" href="{{ path('create_tool') }}">Déposer</a>
 			</div>
 		</div>
 	</div>

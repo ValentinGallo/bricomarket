@@ -2,7 +2,6 @@
 
 {% block title %}Messagerie
 {% endblock %}
-
 {% block body %}
 	<h1 class="text-white">Messagerie</h1>
 	<div class="row text-white">
@@ -10,7 +9,7 @@
 			<h3>Contacts :</h3>
 			<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 				{% for user in app.getUser().getListUserMessages() %}
-					<a class="nav-link {% if user.id == default_id %}active{% endif %}" id="v-pills-{{ user.id }}-tab" data-toggle="pill" href="#v-pills-{{ user.id }}" role="tab" aria-controls="v-pills-home" aria-selected="true">{{ user.username }}</a>
+					<a class="nav-link bg-white {% if user.id == default_id %}active{% endif %}" id="v-pills-{{ user.id }}-tab" data-toggle="pill" href="#v-pills-{{ user.id }}" role="tab" aria-controls="v-pills-home" aria-selected="true">- {{ user.username }}</a>
 				{% endfor %}
 			</div>
 		</div>

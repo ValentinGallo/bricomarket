@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Tool;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Tool|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,22 +19,28 @@ class ToolRepository extends ServiceEntityRepository
         parent::__construct($registry, Tool::class);
     }
 
-    // /**
-    //  * @return Tool[] Returns an array of Tool objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findCustom($name, $idDepartment, $idCategory)
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $qb = $this->createQueryBuilder('t')
+            ->leftJoin('t.department', 'd')
+            ->leftJoin('t.category', 'c')
+            ->orderBy('t.id', 'ASC');
+        if ($name) {
+            $qb->andWhere('t.name LIKE :name')
+                ->setParameter('name', '%'.$name.'%');
+        }
+        if ($idDepartment) {
+            $qb->andWhere('d.id = :department')
+                ->setParameter('department', $idDepartment);
+        }
+        if ($idCategory) {
+            $qb->andWhere('c.id = :category')
+                ->setParameter('category', $idCategory);
+        }
+        return $qb->getQuery()
+            ->getResult();
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?Tool

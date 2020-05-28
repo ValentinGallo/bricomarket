@@ -3,10 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Category;
 use App\Form\RegistrationType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,6 +27,8 @@ class SecurityController extends AbstractController
 
         $form->handleRequest($request);
 
+        $category = $this->getDoctrine()->getRepository(Category::class)->findAll();
+
         if($form->isSubmitted() && $form->isValid()) {
             $hash = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hash);
@@ -36,14 +39,21 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('security/registration.html.twig', ['form' => $form->createView()]);
+        return $this->render('security/registration.html.twig', [
+            'form' => $form->createView(),
+            'list_category' => $category,
+            ]);
     }
 
     /** 
      * @route("/login", name="app_login")
     */
     public function login(){
-        return $this->render('security/login.html.twig');
+        $category = $this->getDoctrine()->getRepository(Category::class)->findAll();
+
+        return $this->render('security/login.html.twig',[
+            'list_category' => $category,
+        ]);
     }
 
     /** 

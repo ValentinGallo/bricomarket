@@ -5,53 +5,122 @@
 
 {% block body %}
 	<form method="post" action="{{ path('list_tool') }}">
-	<div class="input-group mb-2">
-		<input name="name" type="text" value="{{ name }}" class="form-control"  placeholder="Taper ici votre outil">
-		<select name="department" class="custom-select col-md-4">
-			<option value="">Département...</option>
-			{% for department in list_department %}
-			<option value="{{ department.getId() }}">{{ department.getFullName() }}</option>
-			{% endfor %}
-		</select>
-		<div class="input-group-append">
-			<button class="btn btn-warning">
-				<i class="fas fa-search"></i>
-				Rechercher</button>
+		<div class="input-group mb-2">
+			<input name="name" type="text" value="{{ name }}" class="form-control" placeholder="Taper ici votre outil">
+			<select name="department" class="custom-select col-md-4">
+				<option value="">Départements...</option>
+				{% for department in list_department %}
+					{% if department.getId()==dep %}
+						<option value="{{ department.getId() }}" selected>{{ department.getFullName() }}</option>
+					{% else %}
+						<option value="{{ department.getId() }}">{{ department.getFullName() }}</option>
+					{% endif %}
+				{% endfor %}
+			</select>
+			<select name="category" class="custom-select col-md-4">
+				<option value="">Catégories...</option>
+				{% for category in list_category %}
+					{% if category.getId()==cat %}
+						<option value="{{ category.getId() }}" selected>{{ category.getName() }}</option>
+					{% else %}
+						<option value="{{ category.getId() }}">{{ category.getName() }}</option>
+					{% endif %}
+				{% endfor %}
+			</select>
+			<div class="input-group-append">
+				<button class="btn btn-warning">
+					<i class="fas fa-search"></i>
+					Rechercher</button>
+			</div>
 		</div>
-	</div>
 	</form>
 	<h1 class="text-white">Liste des outils disponibles</h1>
 
-	<div class="row">
-		{% for tool in list_tools %}
-			<div class="col-sm-6">
-				<div class="card mb-3 ">
-					{% if tool.picture %}
-						<img src="{{ asset('uploads/pictures/' ~ tool.picture) }}" class="card-img-top img-tool">
-					{% else %}
-						<img src="{{ asset('images/no_image.png') }}" class="card-img-top img-tool">
+	<ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+		<li class="nav-item" role="presentation">
+			<a class="nav-link bg-white text-dark offre active" id="Offre-tab" data-toggle="tab" href="#Offre" role="tab" aria-controls="Offre" aria-selected="true">Offre</a>
+		</li>
+		<li class="nav-item" role="presentation">
+			<a class="nav-link bg-white text-dark demande" id="Demande-tab" data-toggle="tab" href="#Demande" role="tab" aria-controls="Demande" aria-selected="false">Demande</a>
+		</li>
+	</ul>
+	<div class="tab-content" id="myTabContent">
+		<div class="tab-pane fade show active" id="Offre" role="tabpanel" aria-labelledby="Offre-tab">
+			<div class="row">
+				{% for tool in list_tools %}
+					{% if tool.type == 'Offre' %}
+						<div class="col-sm-6">
+							<div class="card mb-3 ">
+								{% if tool.picture %}
+									<img src="{{ asset('uploads/pictures/' ~ tool.picture) }}" class="card-img-top img-tool">
+								{% else %}
+									<img src="{{ asset('images/no_image.png') }}" class="card-img-top img-tool">
+								{% endif %}
+								<div class="card-body">
+									<h5 class="card-title">
+										<span class="badge badge-dark">
+											{{ tool.type }}</span>
+										{{ tool.name }}<span class="badge badge-warning float-right">{{ tool.prices }}€/jour</span>
+									</h5>
+									<p class="card-text">{{ tool.text|slice(0,60) }}
+										(...)</p>
+																			<form method="post" action="{{ path('list_tool') }}">
+										<input name="department" type="hidden" value="{{ tool.getDepartment().getId() }}">
+										<i class="fas fa-map-marker-alt"></i>
+										<button class="btn btn-link" type="submit" style="padding-right: 0;">
+											{{ tool.getDepartment().getName() }}</button>
+											<a class="btn" style="padding-left:0;">{{ tool.address }}</a>
+									</form>
+									<i class="fas fa-user"></i>
+									{{ tool.getCreator().username }}
+									<a class="btn btn-warning float-right" href="{{ path('tool', {'id': tool.id}) }}">Consulter</a>
+									<p class="card-text">
+										<small class="text-muted">Annonce publié le
+											{{ tool.date|date("m/d/Y") }}</small>
+									</p>
+								</div>
+							</div>
+						</div>
 					{% endif %}
-					<div class="card-body">
-						<h5 class="card-title">
-							<span class="badge badge-dark">
-								{{ tool.type }}</span>
-							{{ tool.name }}<span class="badge badge-warning float-right">{{ tool.prices }}€/jour</span>
-						</h5>
-						<p class="card-text">{{ tool.text|slice(0,60) }}
-							(...)</p>
-						<i class="fas fa-user"></i>
-						{{ tool.getCreator().username }}
-						<i class="fas fa-map-marker-alt"></i>
-						<a href="#">{{ tool.getDepartment().name }}</a>
-						{{ tool.address }}
-						<a class="btn btn-warning float-right" href="{{ path('tool', {'id': tool.id}) }}">Consulter</a>
-						<p class="card-text">
-							<small class="text-muted">Annonce publié le
-								{{ tool.date|date("m/d/Y") }}</small>
-						</p>
-					</div>
-				</div>
+				{% endfor %}
 			</div>
-		{% endfor %}
+		</div>
+		<div class="tab-pane fade" id="Demande" role="tabpanel" aria-labelledby="Demande-tab">
+			<div class="row">
+				{% for tool in list_tools %}
+					{% if tool.type == 'Demande' %}
+						<div class="col-sm-6">
+							<div class="card mb-3 ">
+								{% if tool.picture %}
+									<img src="{{ asset('uploads/pictures/' ~ tool.picture) }}" class="card-img-top img-tool">
+								{% else %}
+									<img src="{{ asset('images/no_image.png') }}" class="card-img-top img-tool">
+								{% endif %}
+								<div class="card-body">
+									<h5 class="card-title">
+										<span class="badge badge-dark">
+											{{ tool.type }}</span>
+										{{ tool.name }}<span class="badge badge-success float-right">{{ tool.prices }}€/jour</span>
+									</h5>
+									<p class="card-text">{{ tool.text|slice(0,60) }}
+										(...)</p>
+									<i class="fas fa-user"></i>
+									{{ tool.getCreator().username }}
+									<i class="fas fa-map-marker-alt"></i>
+									<a href="#">{{ tool.getDepartment().name }}</a>
+									{{ tool.address }}
+									<a class="btn btn-success float-right" href="{{ path('tool', {'id': tool.id}) }}">Consulter</a>
+									<p class="card-text">
+										<small class="text-muted">Annonce publié le
+											{{ tool.date|date("m/d/Y") }}</small>
+									</p>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				{% endfor %}
+			</div>
+		</div>
 	</div>
+
 {% endblock %}
