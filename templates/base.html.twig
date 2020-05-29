@@ -53,7 +53,7 @@
 						<a type="button" class="btn btn-dark" href="{{ path('app_registration') }}">S'inscrire</a>
 						<a type="button" class="btn btn-warning" href="{{ path('app_login') }}">Se connecter</a>
 					{% else %}
-						<a href="{{ path('message', {'id': 'all'}) }}">
+						<a href="{{ path('message', {'id': 'all'}) }}" class="text-dark">
 							<i class="far fa-comments"></i>
 							{% if app.getUser().getNotReadNumber() %}
 								<span class="badge badge-warning">{{ app.getUser().getNotReadNumber() }}</span>
@@ -64,7 +64,7 @@
 							Messages
 							
 						</a>
-						<a href="{{ path('profil') }}">
+						<a href="{{ path('profil') }}" class="text-dark">
 							<i class="far fa-user"></i>
 							{{ app.user.username }}</a>
 						<a type="button" class="btn btn-warning" href="{{ path('app_logout') }}">Se déconnecter</a>

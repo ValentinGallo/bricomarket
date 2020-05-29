@@ -4,13 +4,16 @@
 {% endblock %}
 
 {% block body %}
-<h2 class="text-white">Mes informations</h2>
-<div class="card">
-	<div class="card-body">
-		{{ form_start(form) }}
-		<div class="row">
-			<div class="col">
-				{{ form_row(form.username, {'label': 'Nom d\'utilisateur' }) }}
+<div class="row">
+<div class="col-md-6"></div>
+	<div class="col-md-6">
+		<h2 class="text-white"><i class="far fa-user"></i> Mes informations</h2>
+		<div class="card">
+			<div class="card-body">
+				{{ form_start(form) }}
+				<div class="row">
+					<div class="col">
+						{{ form_row(form.username, {'label': 'Nom d\'utilisateur' }) }}
         	</div>
         	<div class="col">
             	{{ form_row(form.telephone, {'label': 'Téléphone' }) }}
@@ -29,7 +32,43 @@
 		{{ form_end(form) }}
 	</div>
 </div>
-<h2 class="text-white">Mes annonces</h2>
+</div>
+
+</div>
+<hr class="bg-white">
+<div class="row">
+<div class="col-md-6">
+<h2 class="text-white"><i class="fas fa-user-check"></i> Demande de location</h2>
+<table class="table text-white">
+  <thead>
+    <tr>
+      <th scope="col">Outil</th>
+      <th scope="col">Utilisateur</th>
+	  <th scope="col">Date début</th>
+	  <th scope="col">Date fin</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+	{% for location in app.getUser().getDemandeLocations() %}
+	{% if not location.getIsAccept() %}
+	<tr>
+      <th scope="row">{{ location.getTool().getName() }}</th>
+		<td>{{ location.getUser().getUsername() }}</td>
+		<td>{{ location.getDateDebut()|date("d/m/Y") }}</td>
+		<td>{{ location.getDateFin()|date("d/m/Y") }}</td>
+      <td>
+	  <a type="button" class="btn btn-success" href="{{ path('update_accept', {'id': location.id, 'value': 1}) }}">✔</a>
+	  <a type="button" class="btn btn-danger" href="{{ path('update_accept', {'id': location.id, 'value': 0}) }}">✖</a>
+	  </td>
+    </tr>
+	{% endif %}
+	{% endfor %}
+  </tbody>
+</table>
+</div>
+<div class="col-md-6">
+<h2 class="text-white"><i class="far fa-newspaper"></i> Mes annonces</h2>
 <table class="table text-white">
   <thead>
     <tr>
@@ -49,10 +88,29 @@
 		  <td><a type="button" class="btn btn-danger" href="{{ path('update_online', {'id': tool.id, 'value': 1}) }}">Offline</a></td>
 	  {% endif %}
       
-      <td><button type="button" class="btn btn-warning">Voir</button></td>
+      <td><a type="button" class="btn btn-warning" href="{{ path('tool', {'id': tool.id}) }}">Voir</a></td>
       <td><button type="button" class="btn btn-danger">Supprimer</button></td>
     </tr>
+	{% if tool.getLocations() is not empty %}
+	<tr>
+		<th scope="row">- Locations</th>
+		<td>Date début</td>
+		<td>Date fin</td>
+		<td>Annulation</td>
+	</tr>
+	{% for location in tool.getLocationsAccept() %}
+	<tr>
+		<td><i class="far fa-user"></i> {{ location.getUser().getUsername()}}</td>
+		<td>{{ location.getDateDebut()|date("d/m/Y") }}</td>
+		<td>{{ location.getDateFin()|date("d/m/Y") }}</td>
+		<td><button type="button" class="btn btn-danger">Annuler</button></td>
+	</tr>
+	{% endfor %}
+	{% endif %}
 	{% endfor %}
   </tbody>
 </table>
+</div>
+
+</div>
 {% endblock %}

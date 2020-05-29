@@ -30,7 +30,7 @@
 			<div class="input-group-append">
 				<button class="btn btn-warning">
 					<i class="fas fa-search"></i>
-					Rechercher</button>
+					<span class="d-none d-md-inline">Rechercher</span></button>
 			</div>
 		</div>
 	</form>
@@ -76,7 +76,7 @@
 									<a class="btn btn-warning float-right" href="{{ path('tool', {'id': tool.id}) }}">Consulter</a>
 									<p class="card-text">
 										<small class="text-muted">Annonce publié le
-											{{ tool.date|date("m/d/Y") }}</small>
+											{{ tool.date|date("d/m/Y") }}</small>
 									</p>
 								</div>
 							</div>
@@ -112,7 +112,7 @@
 									<a class="btn btn-success float-right" href="{{ path('tool', {'id': tool.id}) }}">Consulter</a>
 									<p class="card-text">
 										<small class="text-muted">Annonce publié le
-											{{ tool.date|date("m/d/Y") }}</small>
+											{{ tool.date|date("d/m/Y") }}</small>
 									</p>
 								</div>
 							</div>

@@ -290,4 +290,19 @@ class Tool
 
         return $this;
     }
+
+    /**
+     * @return Collection|Location[]
+     */
+    public function getLocationsAccept(): Collection
+    {
+        $locations = new ArrayCollection();
+        foreach ($this->getLocations() as $location){
+            if ($location->getIsAccept()) {
+                $locations[] = $location;
+            }
+        }
+        return $locations;
+        
+    }
 }

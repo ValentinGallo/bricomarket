@@ -405,4 +405,18 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @return Collection|Location[]
+     */
+    public function getDemandeLocations(): Collection
+    {
+        $locations = new ArrayCollection();
+        foreach ($this->getTools() as $tool){
+            foreach ($tool->getLocations() as $location){
+                $locations[] = $location;
+            }
+        }
+        return $locations;
+    }
+
 }

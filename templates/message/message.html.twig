@@ -6,7 +6,7 @@
 	<h1 class="text-white">Messagerie</h1>
 	<div class="row text-white">
 		<div class="col-3">
-			<h3>Contacts :</h3>
+			<h3><i class="far fa-address-book"></i> Contacts :</h3>
 			<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
 				{% for user in app.getUser().getListUserMessages() %}
 					<a class="nav-link bg-white {% if user.id == default_id %}active{% endif %}" id="v-pills-{{ user.id }}-tab" data-toggle="pill" href="#v-pills-{{ user.id }}" role="tab" aria-controls="v-pills-home" aria-selected="true">- {{ user.username }}</a>

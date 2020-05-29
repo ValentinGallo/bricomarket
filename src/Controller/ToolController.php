@@ -8,8 +8,10 @@ use App\Entity\User;
 use App\Form\ToolType;
 use App\Entity\Message;
 use App\Entity\Category;
+use App\Entity\Location;
 use App\Form\MessageType;
 use App\Entity\Department;
+use App\Form\LocationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -97,15 +99,27 @@ class ToolController extends AbstractController
      */
     public function tool($id,Request $request,EntityManagerInterface $manager)
     {
+        //Outil
+        $tool = $this->getDoctrine()->getRepository(Tool::class)->find($id);
+
+        //Message form
         $message = new Message();
 
-        $form = $this->createForm(MessageType::class, $message);
+        $formMessage = $this->createForm(MessageType::class, $message);
 
-        $form->handleRequest($request);
+        $formMessage->handleRequest($request);
 
+        //Location form
+        $location = new Location();
+
+        $formLocation = $this->createForm(LocationType::class, $location);
+
+        $formLocation->handleRequest($request);
+
+        //Liste des catégories (navbar)
         $category = $this->getDoctrine()->getRepository(Category::class)->findAll();
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if($formMessage->isSubmitted() && $formMessage->isValid()) {
             $date = new \DateTime('@'.strtotime('now'));
             $date->add(new \DateInterval("PT2H"));
             $message->setDate($date);
@@ -120,10 +134,25 @@ class ToolController extends AbstractController
             return $this->redirectToRoute('message');
         }
 
-        $tool = $this->getDoctrine()->getRepository(Tool::class)->find($id);
+        if($formLocation->isSubmitted() && $formLocation->isValid()) {
+            $date = new \DateTime('@'.strtotime('now'));
+            $date->add(new \DateInterval("PT2H"));
+            $location->setCreateTime($date);
+            //$location->setIsAccept(null);
+            $location->setUser($this->getUser());
+            $location->setTool($tool);
+
+            $manager->persist($location);
+            $manager->flush();
+
+            return $this->redirectToRoute('tool',['id'=> $id]);
+        }
+
+        
         return $this->render('tool/tool.html.twig', [
             'tool' => $tool,
-            'form' => $form->createView(),
+            'form_message' => $formMessage->createView(),
+            'form_location' => $formLocation->createView(),
             'list_category' => $category,
         ]);
     }
@@ -136,6 +165,18 @@ class ToolController extends AbstractController
         $tool = $this->getDoctrine()->getRepository(Tool::class)->find($id);
         $tool->setIsOnline($value);
         $manager->persist($tool);
+        $manager->flush();
+        return $this->redirectToRoute('profil');
+    }
+
+    /**
+     * @Route("/update_accept/{id}/{value}", name="update_accept")
+     */
+    public function update_accept($id,$value,EntityManagerInterface $manager)
+    {
+        $location = $this->getDoctrine()->getRepository(Location::class)->find($id);
+        $location->setIsAccept($value);
+        $manager->persist($location);
         $manager->flush();
         return $this->redirectToRoute('profil');
     }

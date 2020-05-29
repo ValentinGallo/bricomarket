@@ -39,8 +39,14 @@ class Location
      */
     private $User;
 
+
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="datetime")
+     */
+    private $createTime;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $isAccept;
 
@@ -97,12 +103,25 @@ class Location
         return $this;
     }
 
+
+    public function getCreateTime(): ?\DateTimeInterface
+    {
+        return $this->createTime;
+    }
+
+    public function setCreateTime(\DateTimeInterface $createTime): self
+    {
+        $this->createTime = $createTime;
+
+        return $this;
+    }
+
     public function getIsAccept(): ?bool
     {
         return $this->isAccept;
     }
 
-    public function setIsAccept(bool $isAccept): self
+    public function setIsAccept(?bool $isAccept): self
     {
         $this->isAccept = $isAccept;
 

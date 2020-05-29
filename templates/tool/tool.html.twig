@@ -12,11 +12,18 @@
 					<span class="badge badge-dark">
 						{{ tool.type }}</span>
 					<small class="text-muted float-right">Annonce publié le
-						{{ tool.date|date("m/d/Y") }}</small>
+						{{ tool.date|date("d/m/Y") }}</small>
 				</div>
 				<div class="card-body">
-					<h5 class="card-title">{{ tool.name }} <a class="float-right">{{ tool.prices }}€/jour</a></h5>
+					<h5 class="card-title">{{ tool.name }}
+						<a class="float-right">{{ tool.prices }}€/jour</a>
+					</h5>
 					<p class="card-text">{{ tool.text|nl2br }}</p>
+					{% if not app.getUser() %}
+						<button class="btn btn-success float-right" title="Connectez vous" disabled>Proposer une location</button>
+					{% else %}
+						<button data-toggle="modal" data-target="#location" class="btn btn-success float-right">Proposer une location</button>
+					{% endif %}
 				</div>
 			</div>
 		</div>
@@ -65,7 +72,8 @@
 					Lieu de la location
 				</div>
 				<div class="card-body">
-					Département : <button type="button" class="btn btn-outline-warning">{{ tool.getDepartment().name }}</button>
+					Département :
+					<button type="button" class="btn btn-outline-warning">{{ tool.getDepartment().name }}</button>
 					<p class="card-text">
 						{{ tool.address }}</p>
 
@@ -73,7 +81,7 @@
 			</div>
 		</div>
 	</div>
-	<!-- Modal -->
+	<!-- Modal form message -->
 	<div class="modal fade" id="message" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -84,16 +92,40 @@
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				{{ form_start(form) }}
+				{{ form_start(form_message) }}
 				<div class="modal-body">
-					{{ form_row(form.text, {'label': 'Message' }) }}
+					{{ form_row(form_message.text, {'label': 'Message' }) }}
 					<input type="hidden" name="receiver_id" value="{{ tool.getCreator().id }}">
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
 					<button type="submit" class="btn btn-warning">Envoyer</button>
 				</div>
-				{{ form_end(form) }}
+				{{ form_end(form_message) }}
+			</div>
+		</div>
+	</div>
+		<!-- Modal form location -->
+	<div class="modal fade" id="location" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Nouveau message à
+						{{ tool.getCreator().username }}</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				{{ form_start(form_location) }}
+				<div class="modal-body">
+					{{ form_row(form_location.dateDebut, {'label': 'Date début' }) }}
+					{{ form_row(form_location.dateFin, {'label': 'Date fin' }) }}
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+					<button type="submit" class="btn btn-success">Proposer la location</button>
+				</div>
+				{{ form_end(form_location) }}
 			</div>
 		</div>
 	</div>
