@@ -5,9 +5,39 @@
 
 {% block body %}
 <div class="row">
-<div class="col-md-6"></div>
 	<div class="col-md-6">
-		<h2 class="text-white"><i class="far fa-user"></i> Mes informations</h2>
+	<h2 class="text-white"><i class="far fa-newspaper"></i> Outils loués</h2>
+<table class="table text-white">
+  <thead>
+    <tr>
+      <th scope="col">Outil</th>
+      <th scope="col">Date</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+    <tbody>
+	{% for location in app.getUser().getLocations() %}
+	{% if location.getIsAccept() or location.getIsAccept() is null %}
+	<tr>
+      <th scope="row"><a class="btn btn-light text-dark">{{ location.getTool().getName() }}</a></th>
+		<td>{{ location.getDateDebut()|date("d/m/Y") }} <i class="far fa-calendar-alt"></i> {{ location.getDateFin()|date("d/m/Y") }}</td>
+      <td>
+	  {% if location.getIsAccept() %}
+		<span class="badge badge-success">Validé</span>
+		{% elseif location.getIsAccept() is null %}
+		<span class="badge badge-warning">En attente</span>
+	  {% endif %}
+	  </td>
+    </tr>
+	{% endif %}
+	{% endfor %}
+  </tbody>
+</table>
+	</div>
+	<div class="col-md-6">
+		<h2 class="text-white">
+			<i class="far fa-user"></i>
+			Mes informations</h2>
 		<div class="card">
 			<div class="card-body">
 				{{ form_start(form) }}
@@ -36,39 +66,13 @@
 
 </div>
 <hr class="bg-white">
-<div class="row">
-<div class="col-md-6">
-<h2 class="text-white"><i class="fas fa-user-check"></i> Demande de location</h2>
-<table class="table text-white">
-  <thead>
-    <tr>
-      <th scope="col">Outil</th>
-      <th scope="col">Utilisateur</th>
-	  <th scope="col">Date début</th>
-	  <th scope="col">Date fin</th>
-      <th scope="col">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-	{% for location in app.getUser().getDemandeLocations() %}
-	{% if not location.getIsAccept() %}
-	<tr>
-      <th scope="row">{{ location.getTool().getName() }}</th>
-		<td>{{ location.getUser().getUsername() }}</td>
-		<td>{{ location.getDateDebut()|date("d/m/Y") }}</td>
-		<td>{{ location.getDateFin()|date("d/m/Y") }}</td>
-      <td>
-	  <a type="button" class="btn btn-success" href="{{ path('update_accept', {'id': location.id, 'value': 1}) }}">✔</a>
-	  <a type="button" class="btn btn-danger" href="{{ path('update_accept', {'id': location.id, 'value': 0}) }}">✖</a>
-	  </td>
-    </tr>
-	{% endif %}
-	{% endfor %}
-  </tbody>
-</table>
-</div>
-<div class="col-md-6">
-<h2 class="text-white"><i class="far fa-newspaper"></i> Mes annonces</h2>
+
+
+<h2 class="text-white"><i class="far fa-newspaper"></i> Mes annonces
+<button type="button" class="btn btn-warning float-right" data-toggle="modal" data-target="#demandeLocation">
+  <i class="fas fa-user-check"></i> Demande de location <span class="badge badge-light">{{ app.getUser().getDemandeLocations()|length }}</span>
+</button></h2>
+
 <table class="table text-white">
   <thead>
     <tr>
@@ -80,29 +84,33 @@
   </thead>
   <tbody>
 	{% for tool in app.getUser().getTools() %}
-	<tr>
-      <th scope="row">{{ tool.getName() }}</th>
+
 	  {% if tool.getIsOnline() %}
-	  <td><a type="button" class="btn btn-success" href="{{ path('update_online', {'id': tool.id, 'value': 0}) }}">Online</a></td>
+	  	<tr class="bg-success">
+      <th scope="row">{{ tool.getName() }}</th>
+	  <td><a type="button" class="btn btn-light" href="{{ path('update_online', {'id': tool.id, 'value': 0}) }}">En ligne</a></td>
 	  {% else %}
-		  <td><a type="button" class="btn btn-danger" href="{{ path('update_online', {'id': tool.id, 'value': 1}) }}">Offline</a></td>
+	  	<tr class="bg-danger">
+      <th scope="row">{{ tool.getName() }}</th>	
+		  <td><a type="button" class="btn btn-light" href="{{ path('update_online', {'id': tool.id, 'value': 1}) }}">Hors ligne</a></td>
 	  {% endif %}
       
-      <td><a type="button" class="btn btn-warning" href="{{ path('tool', {'id': tool.id}) }}">Voir</a></td>
-      <td><button type="button" class="btn btn-danger">Supprimer</button></td>
+      <td><a type="button" class="btn btn-dark" href="{{ path('tool', {'id': tool.id}) }}">Voir</a></td>
+      <td><button type="button" class="btn btn-light">Supprimer</button></td>
     </tr>
 	{% if tool.getLocations() is not empty %}
 	<tr>
-		<th scope="row">- Locations</th>
-		<td>Date début</td>
-		<td>Date fin</td>
+		
+		<th scope="row"><i class="fas fa-angle-double-right"></i> Locations</th>
+		<td>Utilisateur</td>
+		<td >Date</td>
 		<td>Annulation</td>
 	</tr>
 	{% for location in tool.getLocationsAccept() %}
 	<tr>
+		<td><i class="fas fa-handshake float-right"></i></td>
 		<td><i class="far fa-user"></i> {{ location.getUser().getUsername()}}</td>
-		<td>{{ location.getDateDebut()|date("d/m/Y") }}</td>
-		<td>{{ location.getDateFin()|date("d/m/Y") }}</td>
+		<td>{{ location.getDateDebut()|date("d/m/Y") }} <i class="far fa-calendar-alt"></i> {{ location.getDateFin()|date("d/m/Y") }}</td>
 		<td><button type="button" class="btn btn-danger">Annuler</button></td>
 	</tr>
 	{% endfor %}
@@ -110,7 +118,48 @@
 	{% endfor %}
   </tbody>
 </table>
-</div>
 
+<!-- Modal Demande de location -->
+<div class="modal fade" id="demandeLocation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-user-check"></i> Demande de location</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Outil</th>
+      <th scope="col">Utilisateur</th>
+	  <th scope="col">Date début</th>
+	  <th scope="col">Date fin</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+	{% for location in app.getUser().getDemandeLocations() %}
+	<tr>
+      <th scope="row">{{ location.getTool().getName() }}</th>
+		<td>{{ location.getUser().getUsername() }}</td>
+		<td>{{ location.getDateDebut()|date("d/m/Y") }}</td>
+		<td>{{ location.getDateFin()|date("d/m/Y") }}</td>
+      <td>
+	  <a type="button" class="btn btn-success" href="{{ path('update_accept', {'id': location.id, 'value': 1}) }}">✔</a>
+	  <a type="button" class="btn btn-danger" href="{{ path('update_accept', {'id': location.id, 'value': 0}) }}">✖</a>
+	  </td>
+    </tr>
+	{% endfor %}
+  </tbody>
+</table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

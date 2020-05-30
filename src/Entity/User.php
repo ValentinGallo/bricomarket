@@ -413,7 +413,9 @@ class User implements UserInterface
         $locations = new ArrayCollection();
         foreach ($this->getTools() as $tool){
             foreach ($tool->getLocations() as $location){
-                $locations[] = $location;
+                if($location->getIsAccept() === null){
+                    $locations[] = $location;
+                }
             }
         }
         return $locations;
