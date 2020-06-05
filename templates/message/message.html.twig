@@ -5,32 +5,48 @@
 {% block body %}
 	<h1 class="text-white">Messagerie</h1>
 	<div class="row text-white">
-		<div class="col-3">
-			<h3><i class="far fa-address-book"></i> Contacts :</h3>
-			<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-				{% for user in app.getUser().getListUserMessages() %}
-					<a class="nav-link bg-white {% if user.id == default_id %}active{% endif %}" id="v-pills-{{ user.id }}-tab" data-toggle="pill" href="#v-pills-{{ user.id }}" role="tab" aria-controls="v-pills-home" aria-selected="true">- {{ user.username }}</a>
-				{% endfor %}
-			</div>
-		</div>
 		<div class="col-9">
 			<div class="tab-content" id="v-pills-tabContent">
 				{% for user in app.getUser().getListUserMessages() %}
 					<div class="tab-pane fade {% if user.id == default_id %}active show{% endif %}" id="v-pills-{{ user.id }}" role="tabpanel" aria-labelledby="{{ user.id }}-tab">
 						<div class="row overflow-auto" style="max-height: 750px;">
 							{% for message in app.getUser().getMessageByUser(user)|sort %}
-								<div class="col-md-8 {% if app.getUser() == message.getSender() %}offset-md-4{% endif %}">
+								<div class="col-md-8 {% if app.getUser() != message.getSender() %}offset-md-4{% endif %}">
 									<div class="card text-dark mb-3 {% if app.getUser() != message.getSender() %}bg-warning{% endif %}">
 										<div class="card-body">
 											{{ message.text }}
 										</div>
-										<div class="card-footer">{{ message.date|date("m/d/Y H:i") }}
+										<div class="card-footer">{{ message.date|date("d/m/Y H:i") }}
 											-
 											{{ message.getSender().username }}</div>
 									</div>
 								</div>
 							{% endfor %}
-							<div class="card text-dark mb-3 col-md-8 offset-md-4">
+							{% for location in user.getLocations() %}
+								{% if location.getTool().getCreator() == app.getUser() and location.getIsAccept() is empty %}
+									<div class="col-md-10 offset-2">
+										<div class="card bg-warning text-dark mb-3">
+											<div class="card-body">
+												<h5 class="card-title">Demande de location<a href="#" class="float-right text-dark">Annonce :
+														{{ location.getTool().name }}</a>
+												</h5>
+
+												<i class="far fa-calendar-alt"></i>
+												Du
+												{{ location.getDateDebut()|date("d/m/Y") }}
+												au
+												{{ location.getDateFin()|date("d/m/Y") }}
+											</div>
+											<div class="card-footer text-light">
+												<a class="btn btn-success" href="{{ path('update_accept', {'id': location.id, 'value': 1}) }}">Accepter</a>
+												<a class="btn btn-danger" href="{{ path('update_accept', {'id': location.id, 'value': 0}) }}">Refuser</a>
+											</div>
+										</div>
+									</div>
+								{% endif %}
+							{% endfor %}
+
+							<div class="card text-dark mb-3 col-md-8">
 								<form method="post" action="{{ path('message', {'id': user.id }) }}">
 									<div class="card-body">
 										<label>Répondre à
@@ -44,7 +60,17 @@
 						</div>
 					</div>
 				{% endfor %}
-
+			</div>
+		</div>
+		<div class="col-3">
+			<h3>
+				<i class="far fa-address-book"></i>
+				Contacts :</h3>
+			<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+				{% for user in app.getUser().getListUserMessages() %}
+					<a class="nav-link bg-white {% if user.id == default_id %}active{% endif %}" id="v-pills-{{ user.id }}-tab" data-toggle="pill" href="#v-pills-{{ user.id }}" role="tab" aria-controls="v-pills-home" aria-selected="true">-
+						{{ user.username }}</a>
+				{% endfor %}
 			</div>
 		</div>
 	</div>

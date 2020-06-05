@@ -27,7 +27,7 @@ class ToolRepository extends ServiceEntityRepository
             ->orderBy('t.id', 'ASC');
         if ($name) {
             $qb->andWhere('t.name LIKE :name')
-                ->setParameter('name', '%'.$name.'%');
+                ->setParameter('name', '%' . $name . '%');
         }
         if ($idDepartment) {
             $qb->andWhere('d.id = :department')

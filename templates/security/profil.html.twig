@@ -4,13 +4,17 @@
 {% endblock %}
 
 {% block body %}
+<div class="alert alert-warning" role="alert">
+  Nous mettons à votre disposition <a class="text-dark font-weight-bold" href="#">un modèle contrat de location</a> entre particuliers 100% gratuit.
+</div>
 <div class="row">
-	<div class="col-md-6">
-	<h2 class="text-white"><i class="far fa-newspaper"></i> Outils loués</h2>
+	<div class="col-md-8">
+	<h2 class="text-white"><i class="fas fa-hammer"></i> Outils loués</h2>
 <table class="table text-white">
   <thead>
     <tr>
       <th scope="col">Outil</th>
+	  <th scope="col">Propriétaire</th>
       <th scope="col">Date</th>
       <th scope="col">Status</th>
     </tr>
@@ -19,7 +23,14 @@
 	{% for location in app.getUser().getLocations() %}
 	{% if location.getIsAccept() or location.getIsAccept() is null %}
 	<tr>
-      <th scope="row"><a class="btn btn-light text-dark">{{ location.getTool().getName() }}</a></th>
+      <td scope="row"><a class="btn btn-light text-dark">{{ location.getTool().getName() }}</a></td>
+		<td>
+		{% if app.getUser().userContacted(location.getTool().getCreator()) %}
+			<a href="{{ path('message', {'id': location.getTool().getCreator().id}) }}" class="btn btn-warning">{{ location.getTool().getCreator().getUsername() }}</a>
+		{% else %}
+			<button class="btn btn-warning">{{ location.getTool().getCreator().getUsername() }}</button>
+		{% endif %}
+		</td>
 		<td>{{ location.getDateDebut()|date("d/m/Y") }} <i class="far fa-calendar-alt"></i> {{ location.getDateFin()|date("d/m/Y") }}</td>
       <td>
 	  {% if location.getIsAccept() %}
@@ -34,7 +45,7 @@
   </tbody>
 </table>
 	</div>
-	<div class="col-md-6">
+	<div class="col-md-4">
 		<h2 class="text-white">
 			<i class="far fa-user"></i>
 			Mes informations</h2>
@@ -55,7 +66,7 @@
             	{{ form_row(form.password, {'label': 'Mot de passe' }) }}
         	</div>
         	<div class="col">
-            {{ form_row(form.confirm_password, {'label': 'Confirmation de mot de passe' }) }}
+            {{ form_row(form.confirm_password, {'label': 'Confirmation' }) }}
         	</div>
     	</div>
     	<button type="submit" class="btn btn-warning">Modifier</button>

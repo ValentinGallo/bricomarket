@@ -20,10 +20,18 @@
 					</h5>
 					<p class="card-text">{{ tool.text|nl2br }}</p>
 					{% if not app.getUser() %}
-						<button class="btn btn-success float-right" title="Connectez vous" disabled>Proposer une location</button>
+						<button class="btn btn-success float-right" title="Connectez vous" disabled>Demander à louer cet outil</button>
 					{% else %}
-						<button data-toggle="modal" data-target="#location" class="btn btn-success float-right">Proposer une location</button>
+						<button data-toggle="modal" data-target="#location" class="btn btn-success float-right">Demander à louer cet outil</button>
 					{% endif %}
+					<form method="post" action="{{ path('list_tool') }}">
+						<input name="category" type="hidden" value="{{ tool.getCategory().getId() }}">
+						<button type="submit" class="btn btn-outline-dark">
+							<i class="fas fa-align-left"></i>
+							{{ tool.getCategory().getName() }}</button>
+					</form>
+
+
 				</div>
 			</div>
 		</div>
@@ -33,11 +41,11 @@
 					Vendeur
 				</div>
 				<div class="card-body">
-					<h5 class="card-title">Nom :
+					<h5 class="card-title">
 						{{ tool.getCreator().username }}</h5>
-					<p class="card-text">Email :
+					<p class="card-text"><i class="fas fa-at"></i> :
 						{{ tool.getCreator().email }}</p>
-					<p class="card-text">Télephone :
+					<p class="card-text"><i class="fas fa-phone"></i> :
 						{{ tool.getCreator().telephone }}</p>
 					{% if not app.getUser() %}
 						<button class="btn btn-warning float-right" title="Connectez vous" disabled>Contacter le loueur</button>
@@ -51,7 +59,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="row">
+	<div class="row mb-4">
 		<div class="col-sm-8">
 			<div class="card">
 				<div class="card-header">
@@ -73,12 +81,25 @@
 				</div>
 				<div class="card-body">
 					Département :
-					<button type="button" class="btn btn-outline-warning">{{ tool.getDepartment().name }}</button>
+					<button type="button" class="btn btn-outline-dark">{{ tool.getDepartment().name }}</button>
 					<p class="card-text">
+						<i class="fas fa-map-marker-alt"></i>
 						{{ tool.address }}</p>
-
+					<img src="{{ asset('images/map.png') }}" class="img-fluid">
 				</div>
 			</div>
+		</div>
+	</div>
+	<h3 class="text-white">Commentaires</h3>
+	<div class="card">
+		<div class="card-header">
+			Jean-Pierre
+		</div>
+		<div class="card-body">
+			<h5 class="card-title">Très bon outil</h5>
+			<p class="card-text">Propriétaire très agréable, aucun problème.</p>
+			<small class="text-muted float-right">Commentaire publié le
+				{{ tool.date|date("d/m/Y") }}</small>
 		</div>
 	</div>
 	<!-- Modal form message -->
@@ -86,47 +107,50 @@
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Nouveau message à
-						{{ tool.getCreator().username }}</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
+					<h5 class="modal-title" id="exampleModalLabel">
+						message à
+						{{ tool.getCreator().username }}
+					</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+					</div>
+					{{ form_start(form_message) }}
+					<div class="modal-body">
+						{{ form_row(form_message.text, {'label': 'Message' }) }}
+						<input type="hidden" name="receiver_id" value="{{ tool.getCreator().id }}">
+						<button data-toggle="modal" data-target="#location" class="btn btn-success">Demander à louer cet outil</button>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+						<button type="submit" class="btn btn-warning">Envoyer</button>
+					</div>
+					{{ form_end(form_message) }}
 				</div>
-				{{ form_start(form_message) }}
-				<div class="modal-body">
-					{{ form_row(form_message.text, {'label': 'Message' }) }}
-					<input type="hidden" name="receiver_id" value="{{ tool.getCreator().id }}">
+			</div>
+		</div><!-- Modal form location --><div class="modal fade" id="location" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Demande de location à
+							{{ tool.getCreator().username }}</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					{{ form_start(form_location) }}
+					<div class="modal-body">
+						{{ form_row(form_location.dateDebut, {'label': 'Date début' }) }}
+						{{ form_row(form_location.dateFin, {'label': 'Date fin' }) }}
+						<div class="alert alert-success" role="alert">
+							Une demande de location sera envoyée au propriétaire, il vous faudra attendre sa réponse.
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+						<button type="submit" class="btn btn-success">Proposer la location</button>
+					</div>
+					{{ form_end(form_location) }}
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-					<button type="submit" class="btn btn-warning">Envoyer</button>
-				</div>
-				{{ form_end(form_message) }}
 			</div>
 		</div>
-	</div>
-		<!-- Modal form location -->
-	<div class="modal fade" id="location" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Nouveau message à
-						{{ tool.getCreator().username }}</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				{{ form_start(form_location) }}
-				<div class="modal-body">
-					{{ form_row(form_location.dateDebut, {'label': 'Date début' }) }}
-					{{ form_row(form_location.dateFin, {'label': 'Date fin' }) }}
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-					<button type="submit" class="btn btn-success">Proposer la location</button>
-				</div>
-				{{ form_end(form_location) }}
-			</div>
-		</div>
-	</div>
-{% endblock %}
+	{% endblock %}

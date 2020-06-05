@@ -30,7 +30,8 @@
 			<div class="input-group-append">
 				<button class="btn btn-warning">
 					<i class="fas fa-search"></i>
-					<span class="d-none d-md-inline">Rechercher</span></button>
+					<span class="d-none d-md-inline">Rechercher</span>
+				</button>
 			</div>
 		</div>
 	</form>
@@ -64,12 +65,12 @@
 									</h5>
 									<p class="card-text">{{ tool.text|slice(0,60) }}
 										(...)</p>
-																			<form method="post" action="{{ path('list_tool') }}">
+									<form method="post" action="{{ path('list_tool') }}">
 										<input name="department" type="hidden" value="{{ tool.getDepartment().getId() }}">
 										<i class="fas fa-map-marker-alt"></i>
 										<button class="btn btn-link" type="submit" style="padding-right: 0;">
 											{{ tool.getDepartment().getName() }}</button>
-											<a class="btn" style="padding-left:0;">{{ tool.address }}</a>
+										<a class="btn" style="padding-left:0;">{{ tool.address }}</a>
 									</form>
 									<i class="fas fa-user"></i>
 									{{ tool.getCreator().username }}

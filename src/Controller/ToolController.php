@@ -85,7 +85,7 @@ class ToolController extends AbstractController
             $manager->persist($tool);
             $manager->flush();
 
-            return $this->redirectToRoute('list_tool');
+            return $this->redirectToRoute('tool',['id'=>  $tool->getId()]);
         }
 
         return $this->render('tool/createTool.html.twig', [
@@ -131,7 +131,7 @@ class ToolController extends AbstractController
             $manager->persist($message);
             $manager->flush();
 
-            return $this->redirectToRoute('message');
+            return $this->redirectToRoute('message',['id'=> $request->get('receiver_id')]);
         }
 
         if($formLocation->isSubmitted() && $formLocation->isValid()) {
